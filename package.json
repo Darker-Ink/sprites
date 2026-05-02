@@ -1,0 +1,90 @@
+{
+  "name": "emoji-sprites",
+  "version": "0.1.0",
+  "description": "Pre-rendered emoji sprite sheets for Twemoji, Fluent UI Emoji, and Noto Emoji, with typed data and lookup helpers.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "emoji",
+    "sprites",
+    "spritesheet",
+    "twemoji",
+    "fluentui-emoji",
+    "noto-emoji"
+  ],
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "data",
+    "sprites",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    },
+    "./data": {
+      "types": "./dist/data.d.ts",
+      "default": "./dist/data.js"
+    },
+    "./meta": {
+      "types": "./dist/meta.d.ts",
+      "default": "./dist/meta.js"
+    },
+    "./sprites": {
+      "types": "./dist/sprites.d.ts",
+      "default": "./dist/sprites.js"
+    },
+    "./lookup": {
+      "types": "./dist/lookup.d.ts",
+      "default": "./dist/lookup.js"
+    },
+    "./search": {
+      "types": "./dist/search.d.ts",
+      "default": "./dist/search.js"
+    },
+    "./data/emojis.json": "./data/emojis.json",
+    "./data/secondary.json": "./data/secondary.json",
+    "./data/emoticons.json": "./data/emoticon_mappings.json",
+    "./sprites/twemoji/base": "./sprites/twemoji/base_sprites.png",
+    "./sprites/twemoji/skin/1": "./sprites/twemoji/skin_tone_1.png",
+    "./sprites/twemoji/skin/2": "./sprites/twemoji/skin_tone_2.png",
+    "./sprites/twemoji/skin/3": "./sprites/twemoji/skin_tone_3.png",
+    "./sprites/twemoji/skin/4": "./sprites/twemoji/skin_tone_4.png",
+    "./sprites/twemoji/skin/5": "./sprites/twemoji/skin_tone_5.png",
+    "./sprites/twemoji/skin/6": "./sprites/twemoji/skin_tone_6.png",
+    "./sprites/fluentui-emoji/base": "./sprites/fluentui-emoji/base_sprites.png",
+    "./sprites/fluentui-emoji/skin/1": "./sprites/fluentui-emoji/skin_tone_1.png",
+    "./sprites/fluentui-emoji/skin/2": "./sprites/fluentui-emoji/skin_tone_2.png",
+    "./sprites/fluentui-emoji/skin/3": "./sprites/fluentui-emoji/skin_tone_3.png",
+    "./sprites/fluentui-emoji/skin/4": "./sprites/fluentui-emoji/skin_tone_4.png",
+    "./sprites/fluentui-emoji/skin/5": "./sprites/fluentui-emoji/skin_tone_5.png",
+    "./sprites/fluentui-emoji/skin/6": "./sprites/fluentui-emoji/skin_tone_6.png",
+    "./sprites/noto-emoji/base": "./sprites/noto-emoji/base_sprites.png",
+    "./sprites/noto-emoji/skin/1": "./sprites/noto-emoji/skin_tone_1.png",
+    "./sprites/noto-emoji/skin/2": "./sprites/noto-emoji/skin_tone_2.png",
+    "./sprites/noto-emoji/skin/3": "./sprites/noto-emoji/skin_tone_3.png",
+    "./sprites/noto-emoji/skin/4": "./sprites/noto-emoji/skin_tone_4.png",
+    "./sprites/noto-emoji/skin/5": "./sprites/noto-emoji/skin_tone_5.png",
+    "./sprites/noto-emoji/skin/6": "./sprites/noto-emoji/skin_tone_6.png"
+  },
+  "scripts": {
+    "generate": "bun src/cli.ts",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepublishOnly": "bun run build"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "sharp": "^0.34.5",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "fuse.js": "^7.3.0"
+  }
+}

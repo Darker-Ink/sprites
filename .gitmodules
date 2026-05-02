@@ -1,0 +1,9 @@
+[submodule "vendor/fluentui-emoji"]
+	path = vendor/fluentui-emoji
+	url = https://github.com/microsoft/fluentui-emoji.git
+[submodule "vendor/twemoji"]
+	path = vendor/twemoji
+	url = https://github.com/jdecked/twemoji.git
+[submodule "vendor/noto-emoji"]
+	path = vendor/noto-emoji
+	url = https://github.com/googlefonts/noto-emoji.git
