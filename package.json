@@ -1,9 +1,19 @@
 {
   "name": "emoji-sprites",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pre-rendered emoji sprite sheets for Twemoji, Fluent UI Emoji, and Noto Emoji, with typed data and lookup helpers.",
   "type": "module",
   "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Darker-Ink/sprites"
+  },
+  "homepage": "https://github.com/Darker-Ink/sprites#readme",
+  "bugs": {
+    "url": "https://github.com/Darker-Ink/sprites/issues"
+  },
   "keywords": [
     "emoji",
     "sprites",
@@ -86,5 +96,8 @@
   },
   "dependencies": {
     "fuse.js": "^7.3.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
