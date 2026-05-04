@@ -5,18 +5,19 @@ import {
   TONE_CODES,
   type Emoji,
   type Provider,
+  type SpriteFormat,
   type SpriteSheet,
   type TilePosition,
 } from "./types.js";
 
-const SHEET_FILES: Record<SpriteSheet, string> = {
-  base: "base_sprites.png",
-  "skin/1": "skin_tone_1.png",
-  "skin/2": "skin_tone_2.png",
-  "skin/3": "skin_tone_3.png",
-  "skin/4": "skin_tone_4.png",
-  "skin/5": "skin_tone_5.png",
-  "skin/6": "skin_tone_6.png",
+const SHEET_BASENAMES: Record<SpriteSheet, string> = {
+  base: "base_sprites",
+  "skin/1": "skin_tone_1",
+  "skin/2": "skin_tone_2",
+  "skin/3": "skin_tone_3",
+  "skin/4": "skin_tone_4",
+  "skin/5": "skin_tone_5",
+  "skin/6": "skin_tone_6",
 };
 
 const PACKAGE_ROOT = new URL("../", import.meta.url);
@@ -27,24 +28,37 @@ const PACKAGE_ROOT = new URL("../", import.meta.url);
  *
  * In Node this returns a `file://` URL; in bundlers (Vite, webpack 5,
  * Rollup, Bun) it resolves to whatever asset URL the bundler produces
- * for the underlying PNG.
+ * for the underlying image.
+ *
+ * Each sheet ships as both PNG (lossless, broadly compatible) and WebP
+ * (lossless, ~30–50 % smaller). Pass `format: "webp"` to opt into the
+ * smaller variant.
  *
  * @param provider - Which provider's art to use
  * @param sheet - Which sheet within the provider
- * @returns A URL string pointing at the sprite PNG
+ * @param format - Output format, `"png"` (default) or `"webp"`
+ * @returns A URL string pointing at the sprite image
  *
  * @example
  * ```ts
  * import { spriteUrl } from "emoji-sprites";
- * const url = spriteUrl("twemoji", "base");
+ * const png  = spriteUrl("twemoji", "base");
+ * const webp = spriteUrl("twemoji", "base", "webp");
  * ```
  */
-export const spriteUrl = (provider: Provider, sheet: SpriteSheet): string => {
-  const file = SHEET_FILES[sheet];
-  if (!file) {
+export const spriteUrl = (
+  provider: Provider,
+  sheet: SpriteSheet,
+  format: SpriteFormat = "png",
+): string => {
+  const base = SHEET_BASENAMES[sheet];
+  if (!base) {
     throw new Error(`Unknown sprite sheet: ${sheet}`);
   }
-  return new URL(`sprites/${provider}/${file}`, PACKAGE_ROOT).href;
+  if (format !== "png" && format !== "webp") {
+    throw new Error(`Unknown sprite format: ${format}`);
+  }
+  return new URL(`sprites/${provider}/${base}.${format}`, PACKAGE_ROOT).href;
 };
 
 /**
@@ -54,16 +68,21 @@ export const spriteUrl = (provider: Provider, sheet: SpriteSheet): string => {
  *
  * @param provider - Which provider's art to use
  * @param sheet - Which sheet within the provider
- * @returns An absolute path to the sprite PNG on disk
+ * @param format - Output format, `"png"` (default) or `"webp"`
+ * @returns An absolute path to the sprite image on disk
  *
  * @example
  * ```ts
  * import { spritePath } from "emoji-sprites";
- * const file = spritePath("noto-emoji", "skin/3");
+ * const file = spritePath("noto-emoji", "skin/3", "webp");
  * ```
  */
-export const spritePath = (provider: Provider, sheet: SpriteSheet): string => {
-  return fileURLToPath(spriteUrl(provider, sheet));
+export const spritePath = (
+  provider: Provider,
+  sheet: SpriteSheet,
+  format: SpriteFormat = "png",
+): string => {
+  return fileURLToPath(spriteUrl(provider, sheet, format));
 };
 
 let parentByChild: Map<Emoji, Emoji> | null = null;

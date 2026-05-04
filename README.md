@@ -72,13 +72,20 @@ type TilePosition = {
 };
 ```
 
-`spriteUrl(provider, sheet)` returns a `file://` URL (Node) or asset URL (bundler). `spritePath(provider, sheet)` returns an absolute filesystem path (Node only).
-
-For bundlers that prefer direct asset imports, every PNG is also exposed via the `exports` map:
+`spriteUrl(provider, sheet)` returns a `file://` URL (Node) or asset URL (bundler). `spritePath(provider, sheet)` returns an absolute filesystem path (Node only). Both accept an optional third `format` argument, `"png"` (default) or `"webp"`, so you can opt into the smaller lossless WebP variant when bytes matter:
 
 ```ts
-import twemojiBase from "emoji-sprites/sprites/twemoji/base";
-import notoSkin1   from "emoji-sprites/sprites/noto-emoji/skin/1";
+spriteUrl("twemoji", "base");          // → .../base_sprites.png
+spriteUrl("twemoji", "base", "webp");  // → .../base_sprites.webp
+```
+
+For bundlers that prefer direct asset imports, every sheet is exposed in both formats via the `exports` map:
+
+```ts
+import twemojiBase     from "emoji-sprites/sprites/twemoji/base";        // PNG (default)
+import twemojiBasePng  from "emoji-sprites/sprites/twemoji/base.png";
+import twemojiBaseWebp from "emoji-sprites/sprites/twemoji/base.webp";
+import notoSkin1Webp   from "emoji-sprites/sprites/noto-emoji/skin/1.webp";
 ```
 
 ### Subpath imports
@@ -104,17 +111,17 @@ import emoticons  from "emoji-sprites/data/emoticons.json"  with { type: "json" 
 
 ## Sprite layout
 
-Each provider ships a base sheet (42 × 39 grid) and six skin-tone sheets (10 × 31 each), all at an 80×80 cell size:
+Each provider ships a base sheet (42 × 39 grid) and six skin-tone sheets (10 × 31 each), all at an 80×80 cell size. Every sheet is emitted as both `.png` (lossless, broadly compatible) and `.webp` (lossless, ~30–50 % smaller):
 
-| Sheet      | File                  | Tone               |
-| ---------- | --------------------- | ------------------ |
-| `base`     | `base_sprites.png`    | non-skin emoji     |
-| `skin/1`   | `skin_tone_1.png`     | default            |
-| `skin/2`   | `skin_tone_2.png`     | light (1F3FB)      |
-| `skin/3`   | `skin_tone_3.png`     | medium-light       |
-| `skin/4`   | `skin_tone_4.png`     | medium             |
-| `skin/5`   | `skin_tone_5.png`     | medium-dark        |
-| `skin/6`   | `skin_tone_6.png`     | dark (1F3FF)       |
+| Sheet      | File                              | Tone               |
+| ---------- | --------------------------------- | ------------------ |
+| `base`     | `base_sprites.{png,webp}`         | non-skin emoji     |
+| `skin/1`   | `skin_tone_1.{png,webp}`          | default            |
+| `skin/2`   | `skin_tone_2.{png,webp}`          | light (1F3FB)      |
+| `skin/3`   | `skin_tone_3.{png,webp}`          | medium-light       |
+| `skin/4`   | `skin_tone_4.{png,webp}`          | medium             |
+| `skin/5`   | `skin_tone_5.{png,webp}`          | medium-dark        |
+| `skin/6`   | `skin_tone_6.{png,webp}`          | dark (1F3FF)       |
 
 Constants are exposed on `meta`:
 
@@ -134,7 +141,7 @@ The sprites are produced by a Bun CLI under `src/` that reads SVGs from upstream
 ```bash
 git submodule update --init --recursive
 bun install
-bun generate           # writes ./sprites/<provider>/*.png
+bun generate           # writes ./sprites/<provider>/*.{png,webp}
 bun generate --help
 ```
 

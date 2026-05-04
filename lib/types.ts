@@ -48,6 +48,16 @@ export type SpriteSheet =
   | "skin/6";
 
 /**
+ * Output format for a sprite sheet. Each sheet ships in two formats:
+ *
+ * - `"png"` — broadly compatible lossless PNG (default).
+ * - `"webp"` — lossless WebP, ~30–50 % smaller than the PNG. Supported
+ *   by every modern browser and bundler; pick this if you care about
+ *   bytes shipped to the client.
+ */
+export type SpriteFormat = "png" | "webp";
+
+/**
  * A single entry in `emojis.json`.
  *
  * Note: skin-tone variants live as separate entries with

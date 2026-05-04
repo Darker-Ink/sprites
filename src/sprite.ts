@@ -137,38 +137,51 @@ export const buildProvider = async (
   let processed = 0;
   await drainQueue(pending, cell, config.concurrency, () => processed++);
 
-  log(`[${provider}] compositing base_sprites.png (${baseTiles.length} tiles)`);
-  await sharp({
-    create: {
-      width: config.base.cols * cell,
-      height: config.base.rows * cell,
-      channels: 4,
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    },
-  })
-    .composite(baseTiles)
-    .png({ compressionLevel: 9 })
-    .toFile(join(outDir, "base_sprites.png"));
+  const writeSheet = async (
+    name: string,
+    tiles: Composite[],
+    width: number,
+    height: number,
+  ): Promise<void> => {
+    log(`[${provider}] compositing ${name}.png/.webp (${tiles.length} tiles)`);
+
+    const composed = sharp({
+      create: {
+        width,
+        height,
+        channels: 4,
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
+      },
+    })
+      .composite(tiles)
+      .png({ compressionLevel: 9 });
+
+    const buf = await composed.toBuffer();
+
+    await Promise.all([
+      sharp(buf).toFile(join(outDir, `${name}.png`)),
+      sharp(buf)
+        .webp({ lossless: true, effort: 6 })
+        .toFile(join(outDir, `${name}.webp`)),
+    ]);
+  };
+
+  await writeSheet(
+    "base_sprites",
+    baseTiles,
+    config.base.cols * cell,
+    config.base.rows * cell,
+  );
 
   await Promise.all(
-    skinTiles.map(async (tiles, i) => {
-      const file = join(outDir, `skin_tone_${i + 1}.png`);
-      log(
-        `[${provider}] compositing skin_tone_${i + 1}.png (${tiles.length} tiles)`,
-      );
-
-      await sharp({
-        create: {
-          width: config.skin.cols * cell,
-          height: config.skin.rows * cell,
-          channels: 4,
-          background: { r: 0, g: 0, b: 0, alpha: 0 },
-        },
-      })
-        .composite(tiles)
-        .png({ compressionLevel: 9 })
-        .toFile(file);
-    }),
+    skinTiles.map((tiles, i) =>
+      writeSheet(
+        `skin_tone_${i + 1}`,
+        tiles,
+        config.skin.cols * cell,
+        config.skin.rows * cell,
+      ),
+    ),
   );
 
   log(`[${provider}] done — ${processed} placed, ${missing} missing`);
